@@ -1,0 +1,63 @@
+import { IProduct } from '../../types';
+
+import { TViewConstructionArgs, View } from '../base/View';
+
+type TProductRenderArgs = Pick<IProduct, 'image' | 'title' | 'category'> & {
+	price: string;
+};
+
+type TProductEventHandlers = {
+	onClick?: (args: { _event: MouseEvent }) => void;
+};
+
+class Product<
+	Element extends HTMLElement = HTMLElement,
+	RenderArgs extends object = TProductRenderArgs,
+	EventHandlers extends object = TProductEventHandlers
+> extends View<
+	Element,
+	RenderArgs & TProductRenderArgs,
+	EventHandlers & TProductEventHandlers
+> {
+	protected _titleElement: HTMLElement;
+	protected _categoryElement: HTMLElement;
+	protected _priceElement: HTMLElement;
+	protected _imageElement: HTMLImageElement;
+
+	constructor(args: TViewConstructionArgs<Element, EventHandlers>) {
+		super(args);
+
+		this._titleElement = this._element.querySelector('.card__title');
+		this._categoryElement = this._element.querySelector('.card__category');
+		this._priceElement = this._element.querySelector('.card__price');
+		this._imageElement = this._element.querySelector('.card__image');
+
+		if (this._eventHandlers.onClick instanceof Function) {
+			this._element.addEventListener('click', this._handleClick.bind(this));
+		}
+	}
+
+	set category(value: string) {
+		this._categoryElement.textContent = String(value);
+	}
+
+	set price(value: string) {
+		this._priceElement.textContent = String(value);
+	}
+
+	set title(value: string) {
+		this._titleElement.textContent = String(value);
+	}
+
+	set image(value: string) {
+		this._imageElement.src = String(value);
+	}
+
+	protected _handleClick(event: MouseEvent) {
+		this._eventHandlers.onClick({
+			_event: event,
+		});
+	}
+}
+
+export { Product as ProductView, TProductRenderArgs, TProductEventHandlers };
