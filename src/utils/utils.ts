@@ -1,13 +1,13 @@
 export function pascalToKebab(value: string): string {
-        return value.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
+	return value.replace(/([a-z0–9])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
 export function isSelector(x: any): x is string {
-        return (typeof x === "string") && x.length > 1;
+	return typeof x === 'string' && x.length > 1;
 }
 
 export function isEmpty(value: any): boolean {
-        return value === null || value === undefined;
+	return value === null || value === undefined;
 }
 
 export type SelectorCollection<T> = string | NodeListOf<Element> | T[];
@@ -84,7 +84,9 @@ export function getObjectProperties(
 		.map(([name, prop]) => name);
 }
 
-
+/**
+ * Устанавливает dataset атрибуты элемента
+ */
 export function setElementData<T extends Record<string, unknown> | object>(
 	el: HTMLElement,
 	data: T
@@ -94,7 +96,9 @@ export function setElementData<T extends Record<string, unknown> | object>(
 	}
 }
 
-
+/**
+ * Получает типизированные данные из dataset атрибутов элемента
+ */
 export function getElementData<T extends Record<string, unknown>>(
 	el: HTMLElement,
 	scheme: Record<string, Function>
@@ -106,23 +110,29 @@ export function getElementData<T extends Record<string, unknown>>(
 	return data as T;
 }
 
-
+/**
+ * Проверка на простой объект
+ */
 export function isPlainObject(obj: unknown): obj is object {
-    const prototype = Object.getPrototypeOf(obj);
+	const prototype = Object.getPrototypeOf(obj);
 	return prototype === Object.getPrototypeOf({}) || prototype === null;
 }
 
 export function isBoolean(v: unknown): v is boolean {
-        return typeof v === 'boolean';
+	return typeof v === 'boolean';
 }
 
-
+/**
+ * Фабрика DOM-элементов в простейшей реализации
+ * здесь не учтено много факторов
+ * в интернет можно найти более полные реализации
+ */
 export function createElement<T extends HTMLElement>(
 	tagName: keyof HTMLElementTagNameMap,
 	props?: Partial<Record<keyof T, string | boolean | object>>,
 	children?: HTMLElement | HTMLElement[]
 ): T {
-    const element = document.createElement(tagName) as T;
+	const element = document.createElement(tagName) as T;
 	if (props) {
 		for (const key in props) {
 			const value = props[key];
@@ -180,4 +190,19 @@ export function declOfNum(x: number, titles: [string, string, string]) {
 		titles[x % 100 > 4 && x % 100 < 20 ? 2 : cases[x % 10 < 5 ? x % 10 : 5]];
 
 	return result;
+}
+
+export function getKeyByValueTranslation(
+	translation: string,
+	object: Record<string, string>
+): string | null {
+	const result = Object.entries(object).find(
+		([, value]) => value == translation
+	);
+
+	if (result === undefined) {
+		return null;
+	}
+
+	return result[0];
 }

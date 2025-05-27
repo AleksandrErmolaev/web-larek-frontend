@@ -4,6 +4,7 @@ import { TViewConstructionArgs, View } from '../base/View';
 
 type TProductRenderArgs = Pick<IProduct, 'image' | 'title' | 'category'> & {
 	price: string;
+	color: string | null;
 };
 
 type TProductEventHandlers = {
@@ -34,6 +35,12 @@ class Product<
 
 		if (this._eventHandlers.onClick instanceof Function) {
 			this._element.addEventListener('click', this._handleClick.bind(this));
+		}
+	}
+
+	set color(value: string | null) {
+		if (value) {
+			this._categoryElement.classList.add(`card__category_${value}`);
 		}
 	}
 
